@@ -1,0 +1,37 @@
+{
+    //(c) Craig Duncan 2020
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "run PML translator",
+        "type": "shell",
+        "command": [
+          "python3"
+        ],
+        "args": [
+          "pml2sml.py",
+          "${relativeFile}"
+        ],
+        "problemMatcher": []
+      },
+      {
+        "label": "run PML translator with notes",
+        "type": "shell",
+        "command": [
+          "python3"
+        ],
+        "args": [
+          "pml2sml.py",
+          "-n",
+          "${relativeFile}"
+        ],
+        "problemMatcher": [],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      }
+    ]
+}

@@ -15,7 +15,7 @@ The copyright holder's programs located in the Repository (software) at any time
 
 # Purpose
 
-The software is disclosed to provide information about the copyright holder's work, and for the limited educational purpose of encouraging 'Open Data' workflows, including the ability to openly read the source code by which input data is transformed into output data.  That does not mean it is a work in the public domain.  Contributions, sharing and suggestions for improvements to the software are encouraged, on these terms.  Use for public or educational purposes is likely to be approved, but prior written notice and agreement from the copyright holder must first be obtained.
+The software is disclosed to provide information about the copyright holder's work, and for the limited educational purpose of discussion about the workflow pipelines described in the [specifications](README.md).  That does not mean it is a work in the public domain.  Contributions, sharing and suggestions for improvements to the software are encouraged, on these terms.  Use for public or educational purposes is likely to be approved, but prior written notice and agreement from the copyright holder must first be obtained.
 
 # Terms
 

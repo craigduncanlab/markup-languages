@@ -4,7 +4,7 @@
 
 # Intro
 
-This is a definition for two markup languages (in development) that are useful when chained together in a text translation pipeline.  
+This is a definition for two markup languages I have created (and are still in development) that are useful when chained together in a text translation pipeline.  
 
 The languages are:
 

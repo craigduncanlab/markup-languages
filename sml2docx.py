@@ -7,7 +7,7 @@
 #
 # The name 'Styled Markup Language' and this implementation (c) Craig Duncan
 # Created 31 August 2019 by Craig Duncan
-# (c) Craig Dunca 2019-2020
+# (c) Craig Duncan 2019-2020
 
 
 import xmlutil

@@ -39,8 +39,8 @@ and each of these lines has the relevant style applied to allow OOXML convention
 
 The proposed workflow and implementation in python is:
 
-- Conversion of .pml text to .sml text ; using law2md.py (pml2sml.py)
-- Conversion of .sml text to OOXML and ultimately to .docx : using docmaker.py (sml2docx.py)
+- Conversion of .pml text to .sml text ; using pml2sml
+- Conversion of .sml text to OOXML and ultimately to .docx : using sml2docx.py
 
 ## Unique features of chaining these markup languages
 
@@ -89,10 +89,10 @@ e.g.
 
 ## Simple line-based hashcodes to use
 
-The prepareParagraph function in docmaker.py matches sml #codes to the template style names.  The default template .docx file is  in LegalDocsTemplate.docx.
+The prepareParagraph function in sml2docx.py matches sml #codes to the template style names.  The default template .docx file is  in LegalDocsTemplate.docx.
 
 The following hashcodes used for .sml map to the Styles in LegalDocsTemplate.docx 
-(see docmaker.py prepareParagraph)
+(see sml2docx.py prepareParagraph)
 
  | sml hashcode |	Equivalent StyleName | Description
  | :-------- | :-------------- | ------------|
@@ -141,9 +141,9 @@ The following hashcodes used for .sml map to the Styles in LegalDocsTemplate.doc
 
 The purpose of SML is to identify line by line styles, however it is often convenient to process a schema or pattern of different styles in a hierarchical way, to a given block of text, or a sequence of sentences.  This saves having to encode SML lines comprehensively.  In addition, this can, if convenient, be a feature taken into account by PML to SML translaters.
 
-If there are multiple sentences in a paragraph, you can direct the parser to use a hashcode pattern within the paragraph by just placing one hashcode at the end  (see docmaker.py function readRowsSpam)
+If there are multiple sentences in a paragraph, you can direct the parser to use a hashcode pattern within the paragraph by just placing one hashcode at the end  (see sml2docx.py function readRowsSpam)
 
-If there are more than 3 sentences in the paragraph, the last hashcode pattern will repeat as often as necessary to complete the paragraph.  These are the patterned hashcodes currently implemented in docmaker.py (sml2dox).
+If there are more than 3 sentences in the paragraph, the last hashcode pattern will repeat as often as necessary to complete the paragraph.  These are the patterned hashcodes currently implemented in sml2docx.py.
 
 
 | Hashcode 		| SML hashcode pattern	|		Description
@@ -230,7 +230,7 @@ PML to SML translator design is based on the premise that by knowing a specific 
 
 The efficacy of the translator is based on domain-specific knowledge and the quality of inferences that can be made by the algorithms that it uses.
 
-The currently implemented plain english markup pre-processor is : law2md.py (txt2sml.py or pml2sml plain english 2 rendering). 
+The currently implemented plain english markup pre-processor is : pml2sml.py. 
 
 ## 'Plain English' long sentence expansion
 
@@ -249,8 +249,8 @@ The way in which the document is processed depends on the currently selected 'th
 
 ## Translation of comments to SML
 
-The initial PML parser to SML, law2md.py (pml2sml.py) recognises simple notes or comments encoded by a '//' at the start of the line (like some programming languages).   These will be converted to an SML hashcode #N for the next stage of text processing.
+The initial PML parser to SML, pml2sml.py, recognises simple notes or comments encoded by a '//' at the start of the line (like some programming languages).   These will be converted to an SML hashcode #N for the next stage of text processing.
 
 e.g.
 
-```// can be used to indicate a comments (notes) line (i.e. #N) will be inserted by law2md.```
+```// can be used to indicate a comments (notes) line (i.e. #N) will be inserted by pml2sml.py```

@@ -713,11 +713,11 @@ if (args==2 and __name__ == '__main__'):
         # remainder is optional for now:
         #
         nameonly,suffix=nbname.split('.')
-        if (suffix=="txt" or suffix=="md" or suffix=="lmd"):    # or suffix=="odt":
+        if (suffix=="txt" or suffix=="md" or suffix=="lmd" or suffix=="pml"):    # or suffix=="odt":
             print("Name is "+nbname)
             customFromFile(nbname)
         else:
-            print("This program requires .txt .md or .lmd extensions for the input (legal markup) file")
+            print("This program requires .txt .md or .lmd or  .pml extensions for the input (PML) file")
     else:
         doError()
 if (args==3 and __name__ == '__main__'):
@@ -727,11 +727,11 @@ if (args==3 and __name__ == '__main__'):
         # remainder is optional for now:
         #
         nameonly,suffix=nbname.split('.')
-        if (suffix=="txt" or suffix=="md" or suffix=="lmd"):    # or suffix=="odt":
+        if (suffix=="txt" or suffix=="md" or suffix=="lmd" or suffix=="pml"):    # or suffix=="odt":
             print("Name is "+nbname)
             customFromFile(nbname)
         else:
-            print("This program requires .txt .md or .lmd extensions for the input lmd file")
+            print("This program requires .txt .md or .lmd or .pml extensions for the input file")
     else:
         doError()
 

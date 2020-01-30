@@ -17,35 +17,39 @@ In brief, you write simple documents in the 'PML' text format (example here) and
 
 I have provided a simple example of my implementation in python, used within the Visual Studio Code text editor in [this note](/VisualStudioCode/README.md)
 
+# Language and design considerations
+
+Going from plain text to complicated style formats, like OOXML which is needed to make Word (.docx) files, is difficult.   It can be helped by using an intermediate style format, like SML.  The main purpose of SML is to provide style codes that can be used to form the more complicated style formats, like OOXML which is needed to make Word (.docx) files.
+
+However, SML is still focussed on style, and my purpose is to allow some more intelligent, high level decisions to be made about both style and content.   Instead of assuming our primary task is writing markup, we should be trying to distil our purpose or intention, and recognising how much of what we write is already part of a convention.  This allows us to reduce the burden of inserting markup at all, or to make better use of simpler markup.
+
+The purpose of translating from PML to SML first is to allow some automated algorithms to make the task of inserting markup easier for writers, so that they don't have to code in SML directly if they can avoid it.   My implementation uses domain knowledge and some clever rules to analyse the PML text to produce as much useful SML as possible.  
+
+Used together, these markup languages can be used, for example, to translate simple text documents into rendered and styled output (for example in a .docx file).  
+
 # How it works
 
-The proposed workflow and implementation in python is:
+At present, the proposed workflow and my python implementation consists of two main translation programs:
 
 - Conversion of .pml text files to .sml text ; using pml2sml
 - Conversion of .sml text to OOXML and ultimately to .docx : using sml2docx.py
 
-The purpose of translating PML to SML first is to allow some automated algorithms to make the task of inserting markup easier for writers.   The purpose of SML is to convert style codes to the more complicated OOXML format which is needed to make Word (.docx) files.
-
-Also, by writing in PML and markup up comments (notes), this can easily be turned on or off for the purpose of the finished .docx document.
-
-Another feature of PML/SML is to be able to insert document breaks - allowing you to produce more than one .docx file from a single PML script file.
-
-# Definitions
-
-Both PML and SML are markup languages, but PML has far less markup definitions.  This does mean, however, that a PML to SML translator may have more work (translation algorithms) to do.
-
-SML is a markup language that specifies the styles for output, in a precise line-by-line fashion (suitable for .OOXML and .docx for example).  
-
-Used together, these markup languages can be used, for example, to translate simple text documents into rendered and styled output (for example in a .docx file).  
-
-Some of the goals of such staged text translation are:
+The staging of markup language processing helps achieves the broad aims of reducing markup burden on the writer.  The technical goals of such staged text translation are:
 
 -  to bridge the inconvenient gap between simple markup and more complex object-orientated, serialised markup languages like OOXML (with another human-readable markup scheme); and
 - to introduce additional markup language features such as document splitting and easy toggle of comments/notes content.
 
 The last features (such as tighter control over notes) are enabled by the markup definitions, but it also requires the translation program to accept override instructions about whether notes should appear in the output or not.
 
-# Plain Markup Language 
+Both PML and SML are markup languages, but SML is more detailed, so a PML to SML translator may have to use translation rules/algorithms to do the work.
+
+SML is a markup language that specifies the styles for output, in a precise line-by-line fashion (suitable for .OOXML and .docx).  
+
+Both PML and SML can distinguish the notes parts of the text, so that the initial PML to SML translator can be set to turn the notes on or off for the purpose of the finished .docx document.
+
+PML/SML can insert document breaks - allowing you to produce more than one .docx file from a single PML script file.   Normal page breaks can also be inserted with a different code (#PB).
+
+# Plain Markup Language  - design
 
 The aim of this markup language is minimalist, to avoid the need for markup except where it can assist with automated application of styles and rendering of new documents.
 
@@ -110,7 +114,7 @@ For example,
 
 Each of these will specify the specific hashcodes to be used in place of the 'default' styles detected by the program.
 
-# Independent use of Styled Markup Language (SML)
+# Styled Markup Language (SML) - design
 
 SML can be used as the basis for a simple translater to OOXML.  I have implemented one such translator in python in conjunction with a predefined .docx template, with the names of styles captured in the text for which the relevant style is applied.
 
@@ -232,9 +236,9 @@ If there are more than 3 sentences in the paragraph, the last hashcode pattern w
 
 # Implementation of the PML to SML translation
 
-PML to SML translator design is based on the premise that by knowing a specific document type, the conventions and writing patterns can be used to detect structure and use this for application of more detailed, line-by-line style codes.  This helps to convert relatively plain text into SML.  It can also be described as an Automatic SML Assistant.
+PML to SML translator design is based on the premise that by knowing a specific document type, the conventions and writing patterns can be used to detect structure and automated the application of detailed, line-by-line style codes.  This helps to convert relatively plain text into SML.  It can also be described as an Automatic SML Assistant.
 
-The efficacy of the translator is based on domain-specific knowledge and the quality of inferences that can be made by the algorithms that it uses.
+The translator is based on domain-specific knowledge and the quality of inferences that can be made by the algorithms that it uses.
 
 The currently implemented plain english markup pre-processor is : pml2sml.py. 
 

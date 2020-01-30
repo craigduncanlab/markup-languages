@@ -421,7 +421,7 @@ elif (args==2 and __name__ == '__main__'):
 		# remainder is optional for now hey:
 		#
 		nameonly,suffix=filename.split('.')
-		if (suffix=="txt" or suffix=="md" or suffix=="lmd"):    # or suffix=="odt":
+		if (suffix=="txt" or suffix=="md" or suffix=="lmd" or suffix=="pml"):    # or suffix=="odt":
 			print("Name is "+filename)
 			print("Hello, this executed after importing docmaker")
 			contentArray=openlmd(filename)

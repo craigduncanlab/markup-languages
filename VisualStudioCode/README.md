@@ -2,6 +2,10 @@
 
 Running the PML to docx process in Visual Studio is easy, once the task.json file is set up.
 
+Load up your script file (now .pml; older versions have .lmd)
+
+![ScriptExample](images/ScriptExample.png)
+
 First select 'Run Task' under Terminal.
 
 Then Select the installed task for notes, or for no notes.

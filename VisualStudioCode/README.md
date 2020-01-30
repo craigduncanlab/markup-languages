@@ -6,19 +6,19 @@ First select 'Run Task' under Terminal.
 
 Then Select the installed task for notes, or for no notes.
 
-![Select Task](SelectTask.png)
+![Select Task](images/SelectTask.png)
 
 Then if you have document division code `-n-` in the script like shown here:
 
-![ScriptDivisions](ScriptDivisions.png)
+![ScriptDivisions](images/ScriptDivisions.png)
 
 You will end up with one .docx document like this in the output folder:
 
-![MemoDocument](GetThis2.png)
+![MemoDocument](images/GetThis2.png)
 
 and the other like this:
 
-![Letter](GetThisToo.png)
+![Letter](images/GetThisToo.png)
 
 
 

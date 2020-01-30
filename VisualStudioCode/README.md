@@ -18,12 +18,8 @@ Then if you have document division code `-n-` in the script like shown here:
 
 You will end up with one .docx document like this in the output folder:
 
-![MemoDocument](images/GetThis2.png)
+![Letter](images/GetThisToo.png)
 
 and the other like this:
 
-![Letter](images/GetThisToo.png)
-
-
-
-
+![MemoDocument](images/GetThis2.png)

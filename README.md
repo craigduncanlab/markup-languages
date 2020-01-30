@@ -11,7 +11,7 @@ The languages are:
  - Plain Markup Language (PML)
  - Styled Markup Language (SML)
  
-Presently, PML and SML and are useful when chained together in a sequence to translate PML text files into .doxc files.
+Presently, PML and SML and are useful when chained together in a sequence to translate PML text files into .docx files.
 
 In brief, you write simple documents in the 'PML' text format (example here) and then by running one or more programs, you can convert that into .docx files.  There is an intermediate markup format used called Styled Markup Language (SML).
 

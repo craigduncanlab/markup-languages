@@ -2,14 +2,37 @@
 
 (c) 29 January 2020 Craig Duncan
 
-# Intro
+# Introduction
 
-This is a definition for two markup languages I have created (and are still in development) that are useful when chained together in a text translation pipeline.  
+This document contains a definition for the two markup languages I have created (and which are still in development).  
 
 The languages are:
 
  - Plain Markup Language (PML)
  - Styled Markup Language (SML)
+ 
+Presently, PML and SML and are useful when chained together in a sequence to translate PML text files into .doxc files.
+
+In brief, you write simple documents in the 'PML' text format (example here) and then by running one or more programs, you can convert that into .docx files.  There is an intermediate markup format used called Styled Markup Language (SML).
+
+I have provided a simple example of my implementation in python, used within the Visual Studio Code text editor in [this note](/VisualStudioCode/README.md)
+
+# How it works
+
+The proposed workflow and implementation in python is:
+
+- Conversion of .pml text files to .sml text ; using pml2sml
+- Conversion of .sml text to OOXML and ultimately to .docx : using sml2docx.py
+
+The purpose of translating PML to SML first is to allow some automated algorithms to make the task of inserting markup easier for writers.   The purpose of SML is to convert style codes to the more complicated OOXML format which is needed to make Word (.docx) files.
+
+Also, by writing in PML and markup up comments (notes), this can easily be turned on or off for the purpose of the finished .docx document.
+
+Another feature of PML/SML is to be able to insert document breaks - allowing you to produce more than one .docx file from a single PML script file.
+
+# Definitions
+
+Both PML and SML are markup languages, but PML has far less markup definitions.  This does mean, however, that a PML to SML translator may have more work (translation algorithms) to do.
 
 SML is a markup language that specifies the styles for output, in a precise line-by-line fashion (suitable for .OOXML and .docx for example).  
 
@@ -22,33 +45,81 @@ Some of the goals of such staged text translation are:
 
 The last features (such as tighter control over notes) are enabled by the markup definitions, but it also requires the translation program to accept override instructions about whether notes should appear in the output or not.
 
-## Context and implementation
+# Plain Markup Language 
 
-SML can be used as an intermediate markup language between the more general PML and one of more output files, but it can be used independently.
+The aim of this markup language is minimalist, to avoid the need for markup except where it can assist with automated application of styles and rendering of new documents.
+
+Consistent with this aim, the present definition of PML avoids the need for marking up plain text except for:
+ - notes; 
+ - punctuation to encode tabulation (e.g. vertical expansion of long legal sentences);
+ - defining where new documents begin; and
+ - metadata (kind of document  - to assist with automated SML generation).
+
+Automated SML generation requires the translator to use algorithms and analysis of the PML text to produce more detailed markup encoding than exists in the PML.  
+
+## Notes
+
+One of the aims of PML is to give easy control over the inclusion of comments(notes) that will pass through to SML.  
+
+## Document divisions
+
+The document division '-n-' is currently the same as SML, but it could be changed if the PML to SML translator makes an appropriate substitution.
+
+## Expansion of sentences by Plain English drafting rules
+
+Rather than a tagging system, PML uses a sentence construction convention (or restriction), namely that sub-paragraphs and lists will not be written vertically in PML.
+
+The intention is that the PML to translate to an intermediate markup language like SML can convert a sentence that is written as :
+
+	This is a sentence that has lists, including: first item; second item; and third item.
+
+into sml like this:
+
+	This is a sentence that has lists, including:#IN
+
+	first item;#H3
+
+	second item; and#H3
+
+	third item.#H3
+
+which can ultimately appear in .docx as something like this:
+
+	This is a sentence that has lists, including:
+
+	(a) first item;
+
+	(b) second item; and
+
+	(c) third item;
+
+There is a legal convention that can require that some components of sentences can be broken into separate lines (paragraphs) depending on the location of list items, which are then indicated not only by line breaks, but also by the colon and semi-colons.  This process is called 'tabulation' in academic legal drafting papers.
+
+The exact hashcode applied in SML will depend on the currently chosen 'theme' of the document.  The parser will turn these into separate paragraphs and attempt to locate the 'and' on the correct line.
+
+## Metadata (categories of document)
+
+The instruction 'meta:' can be used to specify the style outline schemes to be used for PML to SML translation schemes.
+
+For example, 
+
+	meta:legaldoc
+	meta:letter
+	meta:defaultdoc
+	meta:memo
+
+Each of these will specify the specific hashcodes to be used in place of the 'default' styles detected by the program.
+
+# Independent use of Styled Markup Language (SML)
 
 SML can be used as the basis for a simple translater to OOXML.  I have implemented one such translator in python in conjunction with a predefined .docx template, with the names of styles captured in the text for which the relevant style is applied.
 
-For example, in the demonstration template document (LegalDocTemplate.docx), the only text in the document is text naming styles for use with SML, like:
+For example, in the demonstration template document (StylesTemplate.docx), the only text in the document is text naming styles for use with SML, like:
 
 	H1
 	Indent1
 
 and each of these lines has the relevant style applied to allow OOXML conventions to be sampled and used.
-
-## Implementation (translators)
-
-The proposed workflow and implementation in python is:
-
-- Conversion of .pml text to .sml text ; using pml2sml
-- Conversion of .sml text to OOXML and ultimately to .docx : using sml2docx.py
-
-## Unique features of chaining these markup languages
-
-A high degree of automation in the overall process can be achieved by allowing PML to be translated into SML using some assistance from the translators.
-
-PML allows relatively plain text to be converted into SML and ultimately .docx or other file format.  It also allows the easy definition of line comments (notes) in a way that translates into a specific style code in SML, and, ultimately, in .docx.   By setting the parsing options in the pml2sml.py file appropriately, notes (comments) can easily be included or excluded.
-
-# Styled Markup Language (SML)
 
 The penultimate markup language for conversion to OOXML (in this case, SML) must be organised as if each line is a paragraph, and each paragraph needs a style, to conform to OOXML assumptions.
 
@@ -158,71 +229,6 @@ If there are more than 3 sentences in the paragraph, the last hashcode pattern w
 | PL 	|			["NP","NP2","NP2"]		|			Numbered paras with change of numbering
 | LHC |			["LH","LC","LCF"]			|		H1,H2, Indent
 | L2 	|			["H2","Indent1","H3","H3"]		|	H2 with an indent then (a) pattern
-
-# Plain Markup Language 
-
-The aim of this markup language is minimalist, to avoid the need for markup except where it can assist with automated application of styles and rendering of new documents.
-
-Consistent with this aim, the present definition of PML avoids the need for marking up plain text except for:
- - notes; 
- - punctuation to encode tabulation (e.g. vertical expansion of long legal sentences);
- - defining where new documents begin; and
- - metadata (kind of document  - to assist with automated SML generation).
-
-Automated SML generation requires the translator to use algorithms and analysis of the PML text to produce more detailed markup encoding than exists in the PML.  
-
-## Notes
-
-One of the aims of PML is to give easy control over the inclusion of comments(notes) that will pass through to SML.  
-
-## Document divisions
-
-The document division '-n-' is currently the same as SML, but it could be changed if the PML to SML translator makes an appropriate substitution.
-
-## Expansion of sentences by Plain English drafting rules
-
-Rather than a tagging system, PML uses a sentence construction convention (or restriction), namely that sub-paragraphs and lists will not be written vertically in PML.
-
-The intention is that the PML to translate to an intermediate markup language like SML can convert a sentence that is written as :
-
-	This is a sentence that has lists, including: first item; second item; and third item.
-
-into sml like this:
-
-	This is a sentence that has lists, including:#IN
-
-	first item;#H3
-
-	second item; and#H3
-
-	third item.#H3
-
-which can ultimately appear in .docx as something like this:
-
-	This is a sentence that has lists, including:
-
-	(a) first item;
-
-	(b) second item; and
-
-	(c) third item;
-
-There is a legal convention that can require that some components of sentences can be broken into separate lines (paragraphs) depending on the location of list items, which are then indicated not only by line breaks, but also by the colon and semi-colons.  This process is called 'tabulation' in academic legal drafting papers.
-
-The exact hashcode applied in SML will depend on the currently chosen 'theme' of the document.  The parser will turn these into separate paragraphs and attempt to locate the 'and' on the correct line.
-
-## Metadata (categories of document)
-
-The instruction 'meta:' can be used to specify the style outline schemes to be used for PML to SML translation schemes.
-
-For example, 
-
-	meta:legaldoc
-	meta:letter
-	meta:defaultdoc
-	meta:memo
-
-Each of these will specify the specific hashcodes to be used in place of the 'default' styles detected by the program.
 
 # Implementation of the PML to SML translation
 

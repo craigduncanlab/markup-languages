@@ -5,7 +5,7 @@ Craig Duncan
 
 The attractiveness of word processors for people to use is that they emulate a traditional media, which was already popular because it used visual symbols and the represented relationships for those symbols were already spatial to some degree.  
 
-The reason tha information represented visually 'needs' to be converted to anything else is because we don't traditionally have computers interpret the meaning of spatial relations for text as the primary or even first method for identifying spatial regions (or containers) that have meaning.   
+The reason that information represented visually 'needs' to be converted to anything else is because we don't traditionally have computers interpret the meaning of spatial relations for text as the primary or even first method for identifying spatial regions (or containers) that have meaning.   
 
 By omitting the end results of human effort to structure and space text, we never really enable computers to 'speak' in terms of this layout, or structure.  Instead, some meaning is reconstructed by searching, apparently naively, in other ways, using different communication channels.  If humans are, in fact, using multiple channels to represent information (or it is a single channel that can be reconstructed into different components), then by incorporating more of them we can have machines that use the more convenient channel or, alternatively, to confirm or corroborate meaning from one channel by another.
 
@@ -59,4 +59,11 @@ The Word processing environment might encourage authors to indent parts of text,
 
 ## Logic
 
-If we can encode a spatial quality in a region as a single index, we have a good method for simple reasoning about it logically.  Logic - implies certain abstractions (logic is really any kind of system of abstraction; a way of encoding the preceptions and statements about the world; i.e. a formal language for recording perception and transferring knowledge).  What kind of logic?  Might be as simple as propositional logic, in this case (might not even need predicate logic). (cf Russell with 'there exists' and 'for all': https://plato.stanford.edu/entries/quantification/). https://www.cs.odu.edu/~cs381/cs381content/logic/prop_logic/tautology/tautology.html.  If...then is propositional logic (related to existence propositions, implication of B from A e.g. A->B).  https://www.cs.odu.edu/~cs381/cs381content/logic/prop_logic/E2L/E2L.html
+If we can encode a spatial quality in a region as a single index, we have a good method for simple reasoning about it logically.  Logic - implies certain abstractions (logic is really any kind of system of abstraction; a way of encoding the preceptions and statements about the world; i.e. a formal language for recording perception and transferring knowledge).  What kind of logic?  Might be as simple as propositional logic, in this case (might not even need predicate logic). 
+
+Further reading:
+
+cf Russell with 'there exists' and 'for all': 
+https://plato.stanford.edu/entries/quantification/. https://www.cs.odu.edu/~cs381/cs381content/logic/prop_logic/tautology/tautology.html.  
+
+If...then is propositional logic (related to existence propositions, implication of B from A e.g. A->B).  https://www.cs.odu.edu/~cs381/cs381content/logic/prop_logic/E2L/E2L.html

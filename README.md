@@ -28,9 +28,17 @@ We don't want this:
 Complex markup scheme (OOXML) ---> .docx
 ```
 
-Programming languages and development environments intended to work with OOXML (e.g. C#, .NET) often force the programmer/user to adopt a very low-level, bottom-up approach to embedding text within OOXML tags.  The benefits of the original graphical user interface, that allowed simple key-strokes to appear as if they were being made on traditional paper media, and hid the complexity of the program that achieved this design goal, are lost.  
+And we don't want this either:
 
-We want something more like this:
+```
+Complex programming language---> Complex markup scheme (OOXML) ---> .docx
+```
+
+Programming languages and development environments intended to work with OOXML (e.g. C#, .NET) often force the programmer/user to adopt a very low-level, bottom-up approach to embedding text within OOXML tags.  The programmer must accept the unnatural divisions of the text (i.e. the data objects occur where there are line breaks, regardless of the content or type of text).  However, the real problem with this is that it effectively bypasses the main goal of the Word-processor application (which was to leverage key-strokes, hide complexity, and make it seem like key-strokes were being turned into styled text immediately).   
+
+The very concept of programming the data structures that are used for this key-to-screen process removes the fundamental labour-saving assumption on which the Word-processing program was built.   It is like requiring the farmer to spend time building the tractor in order to plough the field.   The end-user of a word processing program is supposed to start with the assumption that it is going to transform their manual typing, and manually-entered style commands, into rendered, styled text.   The complexity needed by the {bloated software application} to do this is supposed to be hidden.
+
+On the other hand, if our goal is to create a smarter software program, that enables the user to avoid having to do as much manual typing and/or styling, then we want to have even less coding of the OOXML tags.  We want something more like this:
 
 ```
 Detect features of natural writing (1) ---> Very Simple Markup (2) ---> Automated line-by-line markup (SML) (3) ---> OOXML --> docx (4)

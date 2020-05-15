@@ -31,26 +31,32 @@ Complex markup scheme (OOXML) ---> .docx
 And we don't want this either:
 
 ```
-Complex programming language---> Complex markup scheme (OOXML) ---> .docx
+Complex programming language+'pro forma' text---> Complex markup scheme (OOXML) ---> .docx
 ```
 
-Programming languages and development environments intended to work with OOXML (e.g. C#, .NET) often force the programmer/user to adopt a very low-level, bottom-up approach to embedding text within OOXML tags.  The programmer must accept the unnatural divisions of the text (i.e. the data objects occur where there are line breaks, regardless of the content or type of text).  However, the real problem with this is that it effectively bypasses the main goal of the Word-processor application (which was to leverage key-strokes, hide complexity, and make it seem like key-strokes were being turned into styled text immediately).   
+Programming languages and development environments intended to work with OOXML (e.g. C#, .NET) often force the programmer/user to adopt a very low-level, bottom-up approach to embedding text within OOXML tags.  OOXML wraps around the text, and is then embedded within a .docx package.  
 
-The very concept of programming the data structures that are used for this key-to-screen process removes the fundamental labour-saving assumption on which the Word-processing program was built.   It is like requiring the farmer to spend time building the tractor in order to plough the field.   The end-user of a word processing program is supposed to start with the assumption that it is going to transform their manual typing, and manually-entered style commands, into rendered, styled text.   The complexity needed by the {bloated software application} to do this is supposed to be hidden.
+There is a preliminary objection to using code to achieve customisation or efficiency.  The main goal of the average Word-processor application is to take key-strokes and make it seem like those key-strokes are transformed into styled text immediately.  The goal of "WYSIWYG" is to hide the complexity of the 'magic code' by which this happens.  But when you start allowing programming of the OOXML-based text data in some way (e.g. an "API" that uses objects that line up with OOXML data types), you throw away this goal.   You no longer have a labour-saving assumption that the program will keep all the complexity invisible.  You are forced to deal with the complexity, *every time*.  
 
-On the other hand, if our goal is to create a smarter software program, that enables the user to avoid having to do as much manual typing and/or styling, then we want to have even less coding of the OOXML tags.  We want something more like this:
+Secondly, you have to treat the bulky OOXML as *the* data structure used for data storage. Your text is wrapped in OOXML *every time* it is put into a .docx file - OOXML is embedded in the 'state' of your text, and you cannot easily unwrap it and put it back together.   You are dependent on a software application that can speak to OOXML.  
+
+Thirdly, you are not just forced to use OOXML as your saving format, but you are also forced to use it for in-memory data manipulation.   OOXML is still the basis for the API, because the API favours the same object-orientated approach as the representation of the text for storage.  This approach also treats a .docx file as the main in-memory container that is being stored at any one time.  Because OOXML is inherently wrapping text form a single document within the object-orientated data structures that the programmers want you to use, you have to model the text with these inappropriate data structures, *every time*. You might find you don't agree with the data types and structures that the software developers accepted in OOXML.  OOXML tends to follow a line-by-line analysis because it uses line-breaks to sub-divide the flow of the data, and to package that data.  You might not like this, nor the label 'paragraph' for describing any kind of text between line breaks.   You might want to use some other container for data, whether it is based on a sentence, paragraph or some other type of language structure.  You might want different data structures in different contexts.
+
+So what is the solution? Ans: a much leaner representation of the text, and programs that enable translation of the text data or your document(s) to OOXML (and then to .docx) as and when needed.  We want something more like this:
 
 ```
-Detect features of natural writing (1) ---> Very Simple Markup (2) ---> Automated line-by-line markup (SML) (3) ---> OOXML --> docx (4)
+Software to detect features of your natural writing (1) ---> Very Simple Markup (2) ---> Automated line-by-line markup (SML) (3) ---> OOXML --> docx (4)
 ```
 
-The advantage of using several steps is that we can chain the abstractions together, and generate a multiplied saving of labour at each step.  A chained set of parsers acts like a chained set of mathematical functions.
+The advantage of using several steps is that we can chain the abstractions together, and generate a multiplied saving of labour (and file storage required) at each step.  A chained set of text parser programs acts like a chained set of mathematical functions.
 
-The focus of Word Processors on OOXML also creates an unnecessary attachment, or dependency on a line-by-line analysis of documents (and the other, inconvenient convention that a 'paragraph' in OOXML is a container for data, whether it is a sentence, paragraph or some other type of language structure).
+It is a top-down approach, and we are even free to introduce an interpretation stage, in which raw plain text is interpreted to give it an initial structure based on its context or category of document.  We might choose a very different data structure for our text representation at the start to what is needed at the end.  However, since OOXML is very much based on a line-by-line approach to storing data in 'paragraphs', we may need a specific stage which takes whatever data we have, and converts it into a line-by-line representation, just before translating into OOXML.
 
-1.  Natural writing uses grammar.  There is structure there, but if computer programmers ignore it, they make up new and less appropriate data containers for the same information.
+Here is a short statement about numbers (1) to (4) above.
 
-2.  The very simple markup is PML.   It is a top-down approach, to determine what kind of document we have, and what kind of markup is needed (independently of individual 'lines' of text).
+1.  Natural writing uses grammar, but it can also be stored as simple unadorned text, in a very small file.  There is structure there, but if computer programmers ignore it, they make up new and less appropriate data containers for the same information.
+
+2.  The first very simple markup scheme that distinguishes a completely plain text document from one that we want to translate into a styled form is PML.   
 
 3. The main purpose of SML is to provide brief, line-by-line style codes that a computer can translate into more complicated style formats, like OOXML, which is needed to make Word (.docx) files.  SML performs a similar function to the 'Markdown' that was used to help prepare HTML documents.  
 
@@ -90,12 +96,12 @@ Automated SML generation requires the translator to use algorithms and analysis 
 
 # Plain Markup Language (PML) - design
 
-The aim of this markup language is minimalist, to avoid the need for markup except where it can assist with automated application of styles and rendering of new documents.
+The aim of this markup language is to avoid the need for markup except where it can assist with automated application of styles and rendering of new documents.  It is a minimalist approach.
 
 Consistent with this aim, the present definition of PML avoids the need for marking up plain text except for:
  - basic metadata related to the type of document  - to assist with automated SML generation.
- - notes; 
- - punctuation like semicolons to encode tabulation (e.g. vertical expansion of long legal sentences); and
+ - identification of notes; 
+ - use of punctuation like semicolons for tabulation (e.g. vertical expansion of long legal sentences); and
  - defining where new documents begin.
 
 ## Metadata (categories of document)

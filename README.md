@@ -1,26 +1,32 @@
-# Styled Markup Language (SML) and Plain Markup Language (PML) Specifications
+# A multi-stage approach to 'just-in-time' creation of .docx content from simple text
 
 (c) 29 January 2020 Craig Duncan
 Updated 15 May 2020.
 
 # Introduction
 
-This document contains a definition for the two markup languages I have created (and which are still in development).  
+This document describes a way in which raw text file data can be stored in very small text files, with minimal annotation, and yet can be used as the input for a computational process that can render, automatically, one or more styled .docx documents.
 
-The languages are:
+This document also contains a specification for the two utility markup languages I have created (and which are still in development).  These can be used as markup formats by themselves, but I have used them as intermediate data-storage formats in an automated workflow, one that can translate raw text files into .docx file(s).  The languages are:
 
  - Plain Markup Language (PML)
  - Styled Markup Language (SML)
  
-Presently, PML and SML are useful when chained together in a sequence to translate PML text files into .docx files.
+That is, PML and SML are useful when chained together in a sequence to translate PML text files into .docx files.
 
-In brief, you can write simple documents in the 'PML' text format (example here) and the output appears as .docx files.  There is an intermediate markup format used called Styled Markup Language (SML) which is used internally, but the user doesn't have to write anything in SML if they do not want to.
+In brief, you can write simple documents in the 'PML' text format (example) and the output appears as .docx files.  A person wanting to translate raw text to .docx may not have to write anything in SML if they do not want to.
 
-I have provided a simple example of my implementation in python, used within the Visual Studio Code text editor in [this note](/Demo/HowTo_PMLparser.md)
+I have provided a simple example of my implementation of this workflow in python, used within the Visual Studio Code text editor in [this note](/Demo/HowTo_PMLparser.md)
 
-# Language and design considerations
+# Language and design considerations : insufficiency of OOXML
 
-Markup-language formats like OOXML are needed to make or store Word (.docx) files.  However, translating directly from plain text to complicated style formats like OOXML, is difficult.   There are too many features within OOXML that assume it will be used with a particular software application that uses the same direct relationship between what is represented on screen or printer, and the data containers used to store the information for that output.  The main goal is to create output to screen or printer that looks like a paper document.   If we cannot introduce abstract intermediate transformation functions, then we cannot achieve the benefits of generalisation of functions.
+The assumption in Word-processing programs that use OOXML is that the program will perform invisible edits on OOXML content and the user will only see, on the screen or printer, what looks like a paper document.  The relationship to OOXML, hidden from the user, is complex: OOXML wraps around the text, and is then embedded within a .docx package.  Some text is fragmented within the OOXML, so that there is no guarantee that our normal understanding of sentences or paragraphs, in a grammatical sense, is reflected in the storage of those parts of text in OOXML.  
+
+We are sometimes told that markup-language formats like OOXML are the primary data structure needed to make or store Word (.docx) files.  The invitation to work with OOXML alone to create Word Processing documents from text data is misguided, at least if you want to explore general data formats that can also be used outside these Word processing applications.  OOXML has a high mutual dependency with the software applications that use it.  It evolved with them, not independently of them.  It is mainly intended to be hidden from users, and is created invisibly by complex, object-orientated software designed to produce a visual rendering of text in response to user-input through a manual typewriter interface.   
+
+A consequence of the environment in which OOXML developed is that translating directly from plain writing (text files) to tagged style-information, like OOXML, is difficult.  OOXML has become a specification that assumes that the application that uses it will already be performing a high level of maintenance of the 'state' of a document rendered to the screen, and that the units of data are the 'paragraphs' (as defined in that context), which are enriched by style-related information.   It is also assumed that a data-orientated model of presentation-style information will be used.  The minimum level of information that needs to be encoded in OOXML for each 'paragraph' in a document is quite high, and supported by comprehensive tables of related numbering or stle information.   
+
+The same factors also suggest that we should not turn to using object-orientated langauges that closely reflect OOXML in order to prepare customised programs for text programs.  We do not want to have to deal with OOXML format *every time* we want to work with a text document, of any kind (whether for storage on disk, or for in-memory calculations).  We do not want to have to accept the line-by-line assumptions that are incorporated into OOXML format.  Rather, we should be inventing new, flexible data formats and programs that avoid the need for OOXML altogether, or can interface with OOXML later without too much difficulty.  If we want to  introduce new 'intelligent' text data formats that are independent of OOXML, we must define them, and also  create programs that can still translate automatically from those formats to OOXML, as and when required.   We must also explore the extent to which we need text formats based on completely different assumptions to OOXML, and the reasons why.
 
 We don't want this:
 
@@ -34,24 +40,16 @@ And we don't want this either:
 Complex programming language+'pro forma' text---> Complex markup scheme (OOXML) ---> .docx
 ```
 
-Programming languages and development environments intended to work with OOXML (e.g. C#, .NET) often force the programmer/user to adopt a very low-level, bottom-up approach to embedding text within OOXML tags.  OOXML wraps around the text, and is then embedded within a .docx package.  
-
-There are a few objections, or inconveniences associated with OOXML and any API that uses the OOXML schema.
-
-1.	The main goal of the average Word-processor application is to take key-strokes and make it seem like those key-strokes are transformed into styled text immediately.  The goal of "WYSIWYG" is to hide the complexity of the 'magic code' by which this happens.  But when you start allowing programming of the OOXML-based text data in some way (e.g. an "API" that uses objects that line up with OOXML data types), you throw away this goal.   You no longer have a labour-saving assumption that the program will keep all the complexity invisible.  You are forced to deal with the complexity, *every time*.  
-
-2.  You have to treat the bulky OOXML as *the* data structure used for data storage. Your text is wrapped in OOXML *every time* it is put into a .docx file - OOXML is embedded in the 'state' of your text, and you cannot easily unwrap it and put it back together.   
-
-3. You are not just forced to use OOXML as your saving format, but you are also forced to use it for in-memory data manipulation.   OOXML is still the basis for the API, because the API favours the same object-orientated approach as the representation of the text for storage.  This approach also treats a single .docx file as the main in-memory container that is being stored at any one time.  
-
-OOXML is inherently wrapping text in a single document within the object-orientated data structures that the programmers want you to use.  You then have to model the text with these inappropriate data structures, *every time*.  OOXML tends to follow a line-by-line analysis because it uses line-breaks to sub-divide the flow of the data, and to package that data.  You might not like this, nor the label 'paragraph' for describing any kind of text between line breaks.   You might find you don't agree with the data types and structures that the software developers accepted in OOXML.  You might want to use some other container for data, whether it is based on a sentence, paragraph or some other type of language structure.  You might want different data structures in different contexts.
-
-4.  Since you cannot easily escape OOXML, if you save in that format, you are dependent on a software application that can speak to OOXML to see the text in a human-readable form (the one that hides the OOXML from you).  
+## Solutions (new data formats and functions upstream of OOXML)
 
 So what is the solution? Ans: a much leaner representation of the text, and programs that enable translation of the text data or your document(s) to OOXML (and then to .docx) as and when needed.  We want something more like this:
 
 ```
-Software to detect features of your natural writing (1) ---> Very Simple Markup (2) ---> Automated line-by-line markup (SML) (3) ---> OOXML --> docx (4)
+Software to detect features of your natural writing (1) ---> 
+Very Simple Markup (PML) (2) ---> 
+Automated line-by-line markup (SML) (3) ---> 
+OOXML (4) --> 
+.docx (5)
 ```
 
 The advantage of using several steps is that we can chain the abstractions together, and generate a multiplied saving of labour (and file storage required) at each step.  A chained set of text parser programs acts like a chained set of mathematical functions.
@@ -74,7 +72,7 @@ It is the transformation from these intermediate 'states' of a document to the n
 
 If this system works, then you only need to type (or translate from recorded voice to the document using speech recognition).  The structure and presentation can be introduced by applying rules to the various parts of the type of document you are writing.
 
-# How it works
+# How the new data formats work
 
 The starting point, or input, is a 'plain markdown' file, which is basically a text document with a few PML additions.  The output is a .docx document (or more than one).
 

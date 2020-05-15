@@ -1,6 +1,7 @@
 # Styled Markup Language (SML) and Plain Markup Language (PML) Specifications
 
 (c) 29 January 2020 Craig Duncan
+Updated 15 May 2020.
 
 # Introduction
 
@@ -11,23 +12,31 @@ The languages are:
  - Plain Markup Language (PML)
  - Styled Markup Language (SML)
  
-Presently, PML and SML and are useful when chained together in a sequence to translate PML text files into .docx files.
+Presently, PML and SML are useful when chained together in a sequence to translate PML text files into .docx files.
 
-In brief, you write simple documents in the 'PML' text format (example here) and then by running one or more programs, you can convert that into .docx files.  There is an intermediate markup format used called Styled Markup Language (SML).
+In brief, you can write simple documents in the 'PML' text format (example here) and the output appears as .docx files.  There is an intermediate markup format used called Styled Markup Language (SML) which is used internally, but the user doesn't have to write anything in SML if they do not want to.
 
-I have provided a simple example of my implementation in python, used within the Visual Studio Code text editor in [this note](/VisualStudioCode/README.md)
+I have provided a simple example of my implementation in python, used within the Visual Studio Code text editor in [this note](/Demo/HowTo_PMLparser.md)
 
 # Language and design considerations
 
-Going from plain text to complicated style formats, like OOXML which is needed to make Word (.docx) files, is difficult.   It can be helped by using an intermediate style format, like SML.  The main purpose of SML is to provide style codes that can be used to form the more complicated style formats, like OOXML which is needed to make Word (.docx) files.
+Markup-language formats like OOXML are needed to make Word (.docx) files.  However, translating directly from plain text to complicated style formats like OOXML, is difficult.   There are too many features within OOXML that are related to the application that uses the OOXML, and there is significant bias toward using the OOXML as a very precise specification to ensure that it can output something to screen or printer that looks like a paper document.  
 
-However, SML is still focussed on style, and my purpose is to allow some more intelligent, high level decisions to be made about both style and content.   Instead of assuming our primary task is writing markup, we should be trying to distil our purpose or intention, and recognising how much of what we write is already part of a convention.  This allows us to reduce the burden of inserting markup at all, or to make better use of simpler markup.
+Programming languages and development environments intended to work with OOXML (e.g. C#, .NET) often force the programmer/user to adopt a very low-level, bottom-up approach to tagging text so that it resembles the desired output.  The computer languages, and the tagging, represents very little benefit to users if it is concerned with low-level encoding of how the text should *look*.   The need to tag the text with a complex annotation scheme, like OOXML, to describe how it should look, even with the benefit of computer code, is contrary to the original design goals of the Word Processing application anyway.  It is simply not a smart solution to replace the labour-saving goals of the Word Processor with a new form of laborious coding and complex annotation.
 
-The purpose of translating from PML to SML first is to allow some automated algorithms to make the task of inserting markup easier for writers, so that they don't have to code in SML directly if they can avoid it.   My implementation uses domain knowledge and some clever rules to analyse the PML text to produce as much useful SML as possible.  
+This problem of having to insert complex annotation to get the look of the document right in a WP application can be solved by using an intermediate style format, like SML.  The main purpose of SML is to provide brief style codes that a computer can translate into more complicated style formats, like OOXML, which is needed to make Word (.docx) files.  SML performs a similar function to the 'Markdown' that was used to help prepare HTML documents.  This kind of markdown has a bias toward translating simple line-by-line style codes or tags into a more complex markup language.  The labiour saving is not so much in how many lines have to be processed, but in how much initial annotation has to be done for a serialised flow of text. 
 
-Used together, these markup languages can be used, for example, to translate simple text documents into rendered and styled output (for example in a .docx file).  
+However, SML is still mainly focussed on labour-saving in relation to style and presentation.  I do not think it permits labour-saving that is based on what the information is.   My goal is to avoid line-by-line annotation and, if possible, to adopt a semantic or content-based data structure that allows some of the line-by-line style codes (even the brief ones) to be themselves inserted by computer automation.  
+
+We can reduce the need for repetitive style codes (or repeated cycles of style codes) by recognising that much of what we write, and how we want to present it, is influenced by context-specific conventions.   By using simple markers to indicate *what* we are doing, we can reduce the burden of inserting style-based markup at all, or we may be able to achieve a higher level of automation of simpler markup schemes.
+
+The reduction of complexity is achieved by introducing a new preliminary step that allows codification of the purpose or context of a document into style schemes, which in turn allow line-by-line style codes to be applied to regions of text, not just individual lines in isolation.   By chaining together more abstract coding schemes with the line-by-line markup schemes, and finally, the markup to OOXML translation, we can achieve a higher degree of abstraction.   The greater the abstraction, the more the computer can relieve the burden of doing the work.  
+
+This is a 'top-down' approach to markup translation.  That is, the purpose of translating from PML to SML first is to allow some automated algorithms to make the task of inserting markup easier for writers, so that they don't even have to code in a line-by-line scheme like SML.  Used together, these markup languages can be used, for example, in a chained sequence to translate simple text documents into rendered and styled output (for example in a .docx file).  My implementation uses domain knowledge and some clever rules to analyse the PML text to produce as much useful SML as possible without requiring the user to do it manually.  
 
 # How it works
+
+The starting point, or input, is a 'plain markdown' file, which is basically a text document with a few PML additions.  The output is a .docx document (or more than one).
 
 At present, the proposed workflow and my python implementation consists of two main translation programs:
 
@@ -36,30 +45,30 @@ At present, the proposed workflow and my python implementation consists of two m
 
 The staging of markup language processing helps achieves the broad aims of reducing markup burden on the writer.  The technical goals of such staged text translation are:
 
--  to bridge the inconvenient gap between simple markup and more complex object-orientated, serialised markup languages like OOXML (with another human-readable markup scheme); and
+-  to bridge the inconvenient gap between simple markup and more complex object-orientated, serialised markup languages like OOXML (it does this with another human-readable markup scheme in the middle of the workflow); and
 - to introduce additional markup language features such as document splitting and easy toggle of comments/notes content.
 
 The last features (such as tighter control over notes) are enabled by the markup definitions, but it also requires the translation program to accept override instructions about whether notes should appear in the output or not.
 
-Both PML and SML are markup languages, but SML is more detailed, so a PML to SML translator may have to use translation rules/algorithms to do the work.
-
 SML is a markup language that specifies the styles for output, in a precise line-by-line fashion (suitable for .OOXML and .docx).  
 
-Both PML and SML can distinguish the notes parts of the text, so that the initial PML to SML translator can be set to turn the notes on or off for the purpose of the finished .docx document.
+Both PML and SML are markup languages, and each inserts more information into the output file, based on internal rules.   The SML output is more detailed than the SML input.  The PML output is the input to the SML.  
 
-PML/SML can insert document breaks - allowing you to produce more than one .docx file from a single PML script file.   Normal page breaks can also be inserted with a different code (#PB).
+Some information needs to pass through every stage unaltered, such as the insertion of page or document breaks.  Also, user-level instructions like whether notes mode is 'on' need to pass through all stages.  Both PML and SML can distinguish the notes parts of the text, so that the initial PML to SML translator can be set to turn the notes on or off for the purpose of the finished .docx document.
 
-# Plain Markup Language  - design
+PML/SML can insert document breaks - allowing you to produce more than one .docx file from a single PML script file.   In SML, normal page breaks can also be inserted with a different code (#PB).
+
+Automated SML generation requires the translator to use algorithms and analysis of the PML text to produce more detailed markup encoding than exists in the starting PML input.  
+
+# Plain Markup Language (PML) - design
 
 The aim of this markup language is minimalist, to avoid the need for markup except where it can assist with automated application of styles and rendering of new documents.
 
 Consistent with this aim, the present definition of PML avoids the need for marking up plain text except for:
  - notes; 
- - punctuation to encode tabulation (e.g. vertical expansion of long legal sentences);
+ - punctuation like semicolons to encode tabulation (e.g. vertical expansion of long legal sentences);
  - defining where new documents begin; and
- - metadata (kind of document  - to assist with automated SML generation).
-
-Automated SML generation requires the translator to use algorithms and analysis of the PML text to produce more detailed markup encoding than exists in the PML.  
+ - basic metadata related to the type of document  - to assist with automated SML generation.
 
 ## Notes
 
@@ -67,13 +76,13 @@ One of the aims of PML is to give easy control over the inclusion of comments(no
 
 ## Document divisions
 
-The document division '-n-' is currently the same as SML, but it could be changed if the PML to SML translator makes an appropriate substitution.
+The document division '-n-' is currently the same in PML as SML, but it could be changed if the PML to SML translator makes an appropriate substitution.
 
-## Expansion of sentences by Plain English drafting rules
+## Transformation of sentences into vertical lists
 
-Rather than a tagging system, PML uses a sentence construction convention (or restriction), namely that sub-paragraphs and lists will not be written vertically in PML.
+PML treats sentences as a single unbroken list of words, and doesn't expect you to set out lists as if they are a table.  That is, PML retains single sentences without line breaks, even if they include lists or sub-paragraphs that are intended to be represented differently in docx.   
 
-The intention is that the PML to translate to an intermediate markup language like SML can convert a sentence that is written as :
+The translation from this PML form to a presentation-based form with separate, styled lines  (more often used in the WP environment) is handled by the PML to SML translator. For example, the translator can convert a sentence that is written in PML as :
 
 	This is a sentence that has lists, including: first item; second item; and third item.
 
@@ -97,9 +106,21 @@ which can ultimately appear in .docx as something like this:
 
 	(c) third item;
 
-There is a legal convention that can require that some components of sentences can be broken into separate lines (paragraphs) depending on the location of list items, which are then indicated not only by line breaks, but also by the colon and semi-colons.  This process is called 'tabulation' in academic legal drafting papers.
-
 The exact hashcode applied in SML will depend on the currently chosen 'theme' of the document.  The parser will turn these into separate paragraphs and attempt to locate the 'and' on the correct line.
+
+## Why PML avoids the need to specify vertical lists in sentences
+
+If our goal is human information processing, and not just text presentation, then we want to ensure that the data structures we used to store and analyse data have more in common with our intended purpose than conventional formats like OOXML do.  PML retains the grammatical convention for sentences, because we can use normal grammatical rules to identify the original sentence, and use the full stop and line breaks as grammatically-inspired markers for text divisions.  The subdivision of a sentence into presentation-specific data types, or transformation into vertical items, is handled further downstream.  
+
+The reason we have to be explicit about this is that the way in which Word Processors, and formats like OOXML store data, has been uncritically accepted as being correct, for the limited purpose of the visual presentation of information.
+
+Efforts at 'clearer' legal drafting are not always focussed on the distinction between making something easier for the human visual system, and whether there is attention to the data structures actually used to store the data in a word processing application.  When people write in long sentences (as lawyers often do), they might choose to adopt work-arounds to make it easier to read the sentence, and this includes how the sentence is visually presented.  In particular, one legal drafting process (known as 'tabulation') rewrites some long sentences into vertical lists, with a new line for different items, even if they are in the same sentence. Some legal writers routinely adopt this approach, skipping the transformation step altogether.  Readers can see the sentence, and are not concerned with how it might be stored in a computer.
+
+These visual work-arounds to long sentences have their draw-backs for analysing the text of sentences stored in Word Processor files.  The reason is that that Word Processor applications do not adopt common grammatical conventions for the way they store text data.  A WP file resembles more a database of blocks of text separated by line breaks. It is not actually a database of sentences, or even sentences on particular topics. Most legal drafters probably do not realise that their efforts to create a more pleasing visual representation of their sentences, by inserting more line breaks, create the potential for even more inconsistency between the grammatical conventions of language, and how that data is stored by a Word Processing application.
+
+The primary concern of Word Processor designers has been how text looks, and so they have been less concerned with functions that require grammatical conventions to be retained, and used.  The Word Processor application may store each new line in something that the data format (e.g. OOXML) happens to calls a 'paragraph', but which has little to do with the normal grammatical meaning of a 'paragraph'.  In OOXML, a list-style sentence that occupies 8 lines may be stored in, say, 8 component parts or 'paragraphs'.  If you scan the file for 'paragraphs', what you get then are bits of a sentence, all looking like they are separate ideas when they are really part of one single sentence.  
+
+The definitions of 'sentences' and 'paragraphs' in our language seems like a basic, fundamental condition for working with text and the meaning of text.   We know that sentences are the basic units of expression for information, and sentences form part of paragraphs.  The normal conventions of language, which of course are intended to perform a function: *to help us gather and interpret meaning*.  For this reason, it makes sense to give greater priority to these grammatical conventions for our upstream data processing than has been the case with presentation-focussed developments like markup schemes and OOXML files.
 
 ## Metadata (categories of document)
 
@@ -164,7 +185,7 @@ e.g.
 
 ## Simple line-based hashcodes to use
 
-The prepareParagraph function in sml2docx.py matches sml #codes to the template style names.  The default template .docx file is  in LegalDocsTemplate.docx.
+The prepareParagraph function in sml2docx.py matches sml #codes to the template style names.  The default template .docx file is in LegalDocsTemplate.docx.
 
 The following hashcodes used for .sml map to the Styles in LegalDocsTemplate.docx 
 (see sml2docx.py prepareParagraph)

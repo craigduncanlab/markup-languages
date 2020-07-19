@@ -1,6 +1,6 @@
 # How to run a PML parser to create docx using Visual Studio
 
-Running the PML to docx process in Visual Studio is easy, once the task.json file is set up.
+Running the PML to docx process in Visual Studio is easy, once the task.json file is set up.  See [Setup](Setup.md).
 
 Load up your script file (now .pml; older versions have .lmd)
 

@@ -20,4 +20,18 @@ Run the scripts
 1. On your files from command line; or
 2. Integrate your scripts with Visual Studio Code and run from there.
 
+## Command line
+
+At present, the proposed workflow and my python implementation consists of two main translation programs:
+
+Conversion of .pml text files to .sml text --> use pml2sml.py
+Conversion of .sml text to OOXML and ultimately to .docx ---> use sml2docx.py
+
+## Using Visual Studio code
+
 To see a simple example of my implementation of this workflow in python, used within the Visual Studio Code text editor, follow [this note](/Demo/HowTo_PMLparser.md)
+
+# Simple examples
+
+
+

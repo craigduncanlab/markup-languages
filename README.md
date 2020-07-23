@@ -25,6 +25,7 @@ Run the scripts
 At present, the proposed workflow and my python implementation consists of two main translation programs:
 
 Conversion of .pml text files to .sml text --> use pml2sml.py
+
 Conversion of .sml text to OOXML and ultimately to .docx ---> use sml2docx.py
 
 ## Using Visual Studio code
@@ -33,5 +34,6 @@ To see a simple example of my implementation of this workflow in python, used wi
 
 # Simple examples
 
+See example.pml
 
 

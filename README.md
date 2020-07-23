@@ -28,6 +28,18 @@ Conversion of .pml text files to .sml text --> use pml2sml.py
 
 Conversion of .sml text to OOXML and ultimately to .docx ---> use sml2docx.py
 
+### Example (PML)
+
+pml2sml.py -n filename.pml
+
+Options:
+
+-n to specify 'notes on')
+
+-o to specify an output folder.
+
+In PML, double-forward-slash // can be used to indicate a comments (notes) line 
+
 ## Using Visual Studio code
 
 To see a simple example of my implementation of this workflow in python, used within the Visual Studio Code text editor, follow [this note](/Demo/HowTo_PMLparser.md)

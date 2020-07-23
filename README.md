@@ -18,4 +18,6 @@ Download this repository.
 
 Run the scripts 
 1. On your files from command line; or
-2. Integrate your scripts with VisualCode and run from there.
+2. Integrate your scripts with Visual Studio Code and run from there.
+
+To see a simple example of my implementation of this workflow in python, used within the Visual Studio Code text editor, follow [this note](/Demo/HowTo_PMLparser.md)

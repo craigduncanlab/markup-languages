@@ -34,6 +34,10 @@ To see a simple example of my implementation of this workflow in python, used wi
 
 # Simple examples
 
-See example.pml
+See:
+
+example.pml
+
+example.sml
 
 

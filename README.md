@@ -34,7 +34,7 @@ pml2sml.py -n filename.pml
 
 Options:
 
--n to specify 'notes on')
+-n to specify 'notes on'
 
 -o to specify an output folder.
 
